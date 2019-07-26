@@ -13,7 +13,7 @@ import { UserService } from './shared/services/user.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Time-Tracker-Frontend';
+  title = 'Time Tracker';
   userNavExpanded: boolean = false;
   currentUser: User;
 

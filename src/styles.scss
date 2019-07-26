@@ -46,9 +46,32 @@ footer {
     color: $grayish;
 }
 
+.center {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
 .error-message {
     color: red;
     font-size: small;
+}
+
+.striped-rows {
+    .row {
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+        border-left: 1px solid black;
+    }
+    .row:nth-child(odd) {
+        background-color: lightgray;
+    }
+    .row:nth-child(even) {
+        background-color: white;
+    }
+    .row:first-child{
+        border-top: 1px solid black;
+        padding-bottom: 6px;
+    }
 }
 
 

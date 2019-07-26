@@ -1,3 +1,52 @@
-<p>
-  home works!
-</p>
+<div class="center">
+  <h1>{{selectedDate | date: "fullDate"}}</h1>
+  Select Different Date <input name="view-date" type="date" [(ngModel)]="pickerDate"> 
+  <button (click)="changeDate()">Go To Date</button>
+</div>
+
+<div class="center">
+  Add New Activity: <button (click)="openActivityModal()"><fa name="plus"></fa></button>
+</div>
+
+<div id="dayOfActivities" class="striped-rows">
+  <div class="row">
+    <div class = "col-sm-3">Title</div>
+    <div class = "col-sm-5">Description</div>
+    <div class = "col-sm-3">Time</div>
+    <div class = "col-sm-1"> </div>
+  </div>
+  <div class="row" *ngFor="let timer of timers; let index=index" (click)="openActivityModal(timer, index)">
+      <div class = "col-sm-3">{{timer.name}}</div>
+      <div class = "col-sm-5">{{timer.description}}</div>
+      <div class = "col-sm-3">{{timer.time}}</div>
+      <div class = "col-sm-1"><button><fa name="trash"></fa></button> </div>
+  </div>
+</div>
+
+
+<!-- Activity Modal -->
+<div class="backdrop" [ngStyle]="{'display':display}"></div>
+
+
+<div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h4 class="modal-title">{{modalTitle}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>Name: <input type="text" name="activityName" [(ngModel)]="modalActivity.name"></p>
+        <p>Description: <input type="text" name="activityDescription" [(ngModel)]="modalActivity.description"></p>
+        <p>Time (seconds): <input type="number" name="activityTime" value="0" [(ngModel)]="modalActivity.time"></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="saveActivity()" >Save</button>        
+        <button type="button" class="btn btn-default" (click)="cancelModal()" >Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
