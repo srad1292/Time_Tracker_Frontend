@@ -1,1 +1,55 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+
+$grayish: rgba(255,255,255,.5);
+
+
+/**
+*Use vertical flexbox for content to produce a sticky footer
+*/
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.flex-for-footer {
+  flex: 1;
+}
+//End of sticky footer css
+
+//Start Bootstrap overrides
+.dropdown-item {
+    color: black !important;
+}
+
+.dropdown-menu { 
+    right: 0; 
+    left: -6rem;
+    min-width: 14rem;
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+//End Bootstrap overrides
+
+footer {
+    color: $grayish;
+}
+
+.error-message {
+    color: red;
+    font-size: small;
+}
+
+
+
