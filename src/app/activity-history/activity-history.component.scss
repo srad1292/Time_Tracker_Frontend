@@ -1,0 +1,18 @@
+.day-of-activities {
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.activity-chart {
+    // width: 70%;
+    // margin-left: 15%;
+    border: 1px solid black;
+}
+
+#activity-history-display {
+    margin-top: 15px;
+    margin-left: 15%;
+    overflow-y: scroll;
+    width: 70%;
+    max-height: 600px;
+}

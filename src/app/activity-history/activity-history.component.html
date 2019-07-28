@@ -1,0 +1,41 @@
+<div class="center" *ngIf="loadingActivities; else activitiesLoaded">
+    <fa name="spinner" animation="spin" size="4x"></fa>
+</div>
+
+<ng-template #activitiesLoaded>
+    <h1 class='center'>Your Activity History</h1>
+    <div id="activity-history-display" *ngIf="organizedActivities?.length; else noActivitesFound">
+        <div class="day-of-activities" *ngFor="let day of organizedActivities">
+            <div class="center">
+                <h2>{{day.date | date: "fullDate"}}</h2>
+            </div>
+        
+            <div class="striped-rows activity-chart" >
+              <div class="row">
+                <div class = "col-3">Title</div>
+                <div class = "col-5">Description</div>
+                <div class = "col-3">Time</div>
+                <div class = "col-1"> </div>
+              </div>
+              <div class="row" *ngFor="let activity of day.activities; let index=index">
+                  <div class = "col-3">{{activity.name}}</div>
+                  <div class = "col-5">{{activity.description}}</div>
+                  <div class = "col-3">{{activity.time | secondsToTime}}</div>
+                  <div class = "col-1">
+                    <button [disabled]="deletingActivity" (click)="deleteActivity(activity); $event.stopPropagation()">
+                      <fa name="spinner" animation="spin" *ngIf="deletingActivity && index===activityIndex; else notDeletingIndex"></fa>
+                      <ng-template #notDeletingIndex><fa name="trash"></fa></ng-template>
+                    </button>
+                  </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    
+  
+    <ng-template #noActivitesFound>
+      <div class="center">
+        No Activities Found For This User On This Day
+      </div>
+    </ng-template>
+</ng-template>

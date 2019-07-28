@@ -7,6 +7,7 @@ import { HttpClientModule }    from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 //Components
+import { ActivityHistoryComponent } from './activity-history/activity-history.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -25,10 +26,12 @@ import { UserService } from './shared/services/user.service';
 @NgModule({
   declarations: [
     AppComponent,
+    ActivityHistoryComponent,
     HomeComponent,
     LoginComponent,
     RegistrationComponent,
-    SecondsToTimePipe
+    SecondsToTimePipe,
+    
   ],
   imports: [
     BrowserModule,

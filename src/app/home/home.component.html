@@ -19,18 +19,18 @@
 </div>
 
 <ng-template #activitiesLoaded>
-  <div id="dayOfActivities" class="striped-rows" *ngIf="timers?.length; else noActivitesFound">
+  <div id="activity-list" class="striped-rows" *ngIf="timers?.length; else noActivitesFound">
     <div class="row">
-      <div class = "col-sm-3">Title</div>
-      <div class = "col-sm-5">Description</div>
-      <div class = "col-sm-3">Time</div>
-      <div class = "col-sm-1"> </div>
+      <div class = "col-3">Title</div>
+      <div class = "col-5">Description</div>
+      <div class = "col-3">Time</div>
+      <div class = "col-1"> </div>
     </div>
     <div class="row" *ngFor="let timer of timers; let index=index" (click)="openActivityModal(timer, index)">
-        <div class = "col-sm-3">{{timer.name}}</div>
-        <div class = "col-sm-5">{{timer.description}}</div>
-        <div class = "col-sm-3">{{timer.time | secondsToTime}}</div>
-        <div class = "col-sm-1">
+        <div class = "col-3">{{timer.name}}</div>
+        <div class = "col-5">{{timer.description}}</div>
+        <div class = "col-3">{{timer.time | secondsToTime}}</div>
+        <div class = "col-1">
           <button [disabled]="deletingActivity" (click)="deleteActivity(timer, index); $event.stopPropagation()">
             <fa name="spinner" animation="spin" *ngIf="deletingActivity && index===activityIndex; else notDeletingIndex"></fa>
             <ng-template #notDeletingIndex><fa name="trash"></fa></ng-template>
