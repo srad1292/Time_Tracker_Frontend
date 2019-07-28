@@ -9,6 +9,7 @@ import { ActivityTimer } from '../shared/models/activity-timer';
 import { User } from '../shared/models/user';
 
 //Services
+import { ActivityService } from '../shared/services/activity.service';
 import { UserService } from '../shared/services/user.service';
 
 @Component({
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
   selectedDate;
   pickerDate; 
   timers: ActivityTimer[] = [];
-  
+  loadingActivities: boolean = false;
+  deletingActivity: boolean = false;
 
   //Modal Properties
   addingNewActivity: Boolean;
@@ -31,11 +33,12 @@ export class HomeComponent implements OnInit {
   modalActivity: ActivityTimer = new ActivityTimer();
   tickingTime: number = 0;
   activityIndex: number;
+  savingActivity: boolean = false;
   source = timer(1000, 1000);
   ticker; 
   ticking: boolean = false;
 
-  constructor(private router: Router, private userService: UserService) { 
+  constructor(private activityService: ActivityService, private router: Router, private userService: UserService) { 
     if (!this.userService.currentUserValue) { 
       this.router.navigate(['/login']);
     }
@@ -46,17 +49,47 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.selectedDate = moment().format('YYYY-MM-DD');
-    this.timers.push({date: this.selectedDate, description: 'did nothing', time: 40, name: 'idk', username: 'srad1292'});
-
+    this.pickerDate = moment().format('YYYY-MM-DD');
+    this.getActivitiesForDate();
   }
 
   changeDate() {
     this.selectedDate = this.pickerDate;
-    //Call route to get activities for this date
+    this.getActivitiesForDate();
   }
 
+  getActivitiesForDate() {
+    this.loadingActivities = true;
+    this.activityService.getActivitiesByDate(this.selectedDate, this.currentUser.uid).subscribe(
+      (data: any) => {
+        this.loadingActivities = false;
+        this.timers = data['activities'] || [];
+      },  
+      error => {
+        this.loadingActivities = false;
+        this.timers = [];
+        console.log('Error: ', error);
+      }
+    );
+  }
+
+
   deleteActivity(activity, index) {
-    this.timers = this.timers.splice(index, 1);
+    this.activityIndex = index;
+    this.deletingActivity = true;
+    this.activityService.deleteActivity(activity).subscribe(
+      (data: any) => {
+        this.deletingActivity = false;
+        if(data.message && data.message === 'ok') {
+          //Clear out the rating on the front end
+          this.timers.splice(index, 1);
+        }
+      },  
+      error => {
+        this.deletingActivity = false;
+        console.log('delete error: ', error);
+      }
+    );
   }
 
   openActivityModal(activity, index) {
@@ -85,15 +118,46 @@ export class HomeComponent implements OnInit {
     this.modalActivity.date = this.selectedDate;
     this.modalActivity.username = this.currentUser.uid;
     this.modalActivity.time = this.tickingTime;
-    //This is only for new, will need to update for edit
+    this.savingActivity = true;
+    console.log('Modal To Save: ', this.modalActivity);
+    // This is only for new, will need to update for edit
     if(this.addingNewActivity) {
-      this.timers.push(this.modalActivity);
+      this.activityService.createActivity(this.modalActivity).subscribe(
+        (data: any) => {
+          this.savingActivity = false;
+          if(data.recordId) {
+            this.modalActivity['_id'] = data.recordId;
+            this.timers.push(this.modalActivity);
+            this.display='none'; 
+          }
+          else {
+            console.log('no id came for some reason');
+          }
+          
+        },
+        error => { 
+          this.savingActivity = false;
+          console.log('save error: ', error);
+        },
+      );
+      
     }
     else {
-      this.timers[this.activityIndex] = {...this.modalActivity};
+      this.activityService.updateActivity(this.modalActivity).subscribe(
+        (data: any) => {
+          this.savingActivity = false;
+          this.timers[this.activityIndex] = {...this.modalActivity};
+          this.display='none'; 
+        },
+        error => { 
+          this.savingActivity = false;
+          console.log('update error: ', error);
+        }
+      );
+      
     }
 
-    this.display='none'; 
+    
   }
 
   toggleTimer() {

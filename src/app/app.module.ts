@@ -19,6 +19,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { SecondsToTimePipe } from './shared/pipes/secondsToTime.pipe';
 
 //Services 
+import { ActivityService } from './shared/services/activity.service';
 import { UserService } from './shared/services/user.service';
 
 @NgModule({
@@ -36,7 +37,7 @@ import { UserService } from './shared/services/user.service';
     HttpClientModule,
     AngularFontAwesomeModule
   ],
-  providers: [],
+  providers: [ActivityService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
