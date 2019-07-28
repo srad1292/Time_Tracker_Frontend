@@ -18,8 +18,8 @@
   <div class="row" *ngFor="let timer of timers; let index=index" (click)="openActivityModal(timer, index)">
       <div class = "col-sm-3">{{timer.name}}</div>
       <div class = "col-sm-5">{{timer.description}}</div>
-      <div class = "col-sm-3">{{timer.time}}</div>
-      <div class = "col-sm-1"><button><fa name="trash"></fa></button> </div>
+      <div class = "col-sm-3">{{timer.time | secondsToTime}}</div>
+      <div class = "col-sm-1"><button (click)="deleteActivity($event); $event.stopPropagation()"><fa name="trash"></fa></button> </div>
   </div>
 </div>
 
@@ -39,7 +39,15 @@
       <div class="modal-body">
         <p>Name: <input type="text" name="activityName" [(ngModel)]="modalActivity.name"></p>
         <p>Description: <input type="text" name="activityDescription" [(ngModel)]="modalActivity.description"></p>
-        <p>Time (seconds): <input type="number" name="activityTime" value="0" [(ngModel)]="modalActivity.time"></p>
+      </div>
+
+      <div class="modal-body">
+        <div class="center">
+          <p>Time: {{tickingTime | secondsToTime}}</p>
+          <button (click)="toggleTimer()" *ngIf="ticking; else notTicking">Stop</button>
+          <ng-template #notTicking><button (click)="toggleTimer()">Start</button></ng-template>
+          <button (click)="resetTimer()">Reset</button>
+        </div>
       </div>
 
       <div class="modal-footer">
@@ -50,3 +58,4 @@
     </div>
   </div>
 </div>
+

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { timer } from 'rxjs';
 
 import * as moment from 'moment';
 
@@ -22,11 +23,17 @@ export class HomeComponent implements OnInit {
   pickerDate; 
   timers: ActivityTimer[] = [];
   
+
   //Modal Properties
   addingNewActivity: Boolean;
   display: String = 'none';
   modalTitle: String;
   modalActivity: ActivityTimer = new ActivityTimer();
+  tickingTime: number = 0;
+  activityIndex: number;
+  source = timer(1000, 1000);
+  ticker; 
+  ticking: boolean = false;
 
   constructor(private router: Router, private userService: UserService) { 
     if (!this.userService.currentUserValue) { 
@@ -48,19 +55,25 @@ export class HomeComponent implements OnInit {
     //Call route to get activities for this date
   }
 
+  deleteActivity(activity, index) {
+    this.timers = this.timers.splice(index, 1);
+  }
+
   openActivityModal(activity, index) {
     if(activity) {
+      this.activityIndex = index;
       this.addingNewActivity = false;
       this.modalTitle = `Edit Activity: ${activity.name}`;
       this.modalActivity = {...activity};
+      this.tickingTime = activity.time;
     }
     else {
       this.addingNewActivity = true;
       this.modalTitle = 'Add New Activity'
       this.modalActivity = new ActivityTimer();
+      this.tickingTime = 0;
     }
     
-
     this.display='block'; 
   }
 
@@ -71,9 +84,33 @@ export class HomeComponent implements OnInit {
   saveActivity() {
     this.modalActivity.date = this.selectedDate;
     this.modalActivity.username = this.currentUser.uid;
+    this.modalActivity.time = this.tickingTime;
     //This is only for new, will need to update for edit
-    this.timers.push(this.modalActivity);
+    if(this.addingNewActivity) {
+      this.timers.push(this.modalActivity);
+    }
+    else {
+      this.timers[this.activityIndex] = {...this.modalActivity};
+    }
+
     this.display='none'; 
+  }
+
+  toggleTimer() {
+    if(this.ticking) {
+      this.ticking = false;
+      this.ticker.unsubscribe();
+    }
+    else {
+      this.ticking = true;
+      this.ticker = this.source.subscribe(val => this.tickingTime += 1);
+    }
+  }
+
+  resetTimer() {
+    this.ticking = false;
+    this.ticker.unsubscribe();
+    this.tickingTime = this.addingNewActivity ? 0 : this.timers[this.activityIndex].time;
   }
 
 }

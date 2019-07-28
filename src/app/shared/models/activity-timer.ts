@@ -1,7 +1,8 @@
 export class ActivityTimer {
-    date: String;
-    description: String;
-    time: Number;
-    name: String;
-    username: String;
+    // _id: string;
+    date: string;
+    description: string;
+    time: number;
+    name: string;
+    username: string;
 }

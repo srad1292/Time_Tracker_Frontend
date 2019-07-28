@@ -15,6 +15,9 @@ import { RegistrationComponent } from './registration/registration.component';
 //Modules
 import { AppRoutingModule } from './app-routing.module';
 
+//Pipes
+import { SecondsToTimePipe } from './shared/pipes/secondsToTime.pipe';
+
 //Services 
 import { UserService } from './shared/services/user.service';
 
@@ -23,7 +26,8 @@ import { UserService } from './shared/services/user.service';
     AppComponent,
     HomeComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    SecondsToTimePipe
   ],
   imports: [
     BrowserModule,
