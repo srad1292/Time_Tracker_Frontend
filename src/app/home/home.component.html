@@ -2,14 +2,13 @@
   <h1>{{selectedDate | date: "fullDate"}}</h1>
   <form #dateForm="ngForm">
     <input name="view-date" type="date" [(ngModel)]="pickerDate" required> 
-    <button [disabled]="loadingActivities || deletingActivity || !dateForm.form.valid" (click)="changeDate()">Go To Date</button>
+    <button class="btn btn-primary" [disabled]="loadingActivities || deletingActivity || !dateForm.form.valid" (click)="changeDate()">Go To Date</button>
   </form>
 </div>
 
 <div class="center">
-  Add New Activity: 
-  <button [disabled]="loadingActivities || deletingActivity" (click)="openActivityModal()">
-    <fa name="plus"></fa>
+  <button class="btn btn-primary" [disabled]="loadingActivities || deletingActivity" (click)="openActivityModal()">
+      New Activity <fa name="plus"></fa>
   </button>
 </div>
 
@@ -31,7 +30,7 @@
         <div class = "col-5">{{timer.description}}</div>
         <div class = "col-3">{{timer.time | secondsToTime}}</div>
         <div class = "col-1">
-          <button [disabled]="deletingActivity" (click)="deleteActivity(timer, index); $event.stopPropagation()">
+          <button class="btn btn-danger" [disabled]="deletingActivity" (click)="deleteActivity(timer, index); $event.stopPropagation()">
             <fa name="spinner" animation="spin" *ngIf="deletingActivity && index===activityIndex; else notDeletingIndex"></fa>
             <ng-template #notDeletingIndex><fa name="trash"></fa></ng-template>
           </button>
@@ -69,22 +68,22 @@
           <p>Time: {{tickingTime | secondsToTime}}</p>
           <button [disabled]="savingActivity" (click)="toggleTimer()" *ngIf="ticking; else notTicking">Stop</button>
           <ng-template #notTicking>
-            <button [disabled]="savingActivity" (click)="toggleTimer()">Start</button>
+            <button class="btn btn-primary" [disabled]="savingActivity" (click)="toggleTimer()">Start</button>
           </ng-template>
-          <button [disabled]="savingActivity" (click)="resetTimer()">Reset</button>
+          <button class="btn btn-warning" [disabled]="savingActivity" (click)="resetTimer()">Reset</button>
         </div>
       </div>
 
       <div class="modal-footer">
         <ng-container *ngIf="savingActivity; else notSavingActivity">
-            <button type="button" class="btn btn-default" disabled>
+            <button type="button" class="btn btn-success" disabled>
               Saving... <fa name="spinner" animation="spin" size="1x"></fa>
             </button>
         </ng-container>
         <ng-template #notSavingActivity>
-          <button type="button" class="btn btn-default" [disabled]="ticking" (click)="saveActivity()" >Save</button>        
+          <button type="button" class="btn btn-success" [disabled]="ticking || !modalActivity?.name?.length" (click)="saveActivity()" >Save</button>        
         </ng-template>
-        <button type="button" class="btn btn-default" [disabled]="ticking || savingActivity" (click)="cancelModal()" >Cancel</button>
+        <button type="button" class="btn btn-danger" [disabled]="ticking || savingActivity" (click)="cancelModal()" >Cancel</button>
       </div>
 
     </div>

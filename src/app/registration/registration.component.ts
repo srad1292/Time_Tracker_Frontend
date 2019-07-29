@@ -18,6 +18,7 @@ export class RegistrationComponent implements OnInit {
   newUser: User = new User;
   isLoading: boolean = false;
   errorMessage: String;
+  triedRegistration: boolean = false;
 
   constructor(
     private router: Router,
@@ -33,7 +34,12 @@ export class RegistrationComponent implements OnInit {
   }
 
   submitRegistration() {
+    this.errorMessage = '';        
+    this.triedRegistration = true;
+    if(!this.isValidUser()) { return; }
+
     this.isLoading = true;
+
     this.userService.register(this.newUser)
       .subscribe(
           (data: any) => {
@@ -46,6 +52,10 @@ export class RegistrationComponent implements OnInit {
               this.errorMessage = `Error: ${message}`;
           }
       );
+  }
+
+  isValidUser(): boolean{
+      return (!!this.newUser.first_name && !!this.newUser.uid && !!this.newUser.password);
   }
 
 }

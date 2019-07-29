@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   user: User;
   returnUrl: string;
   errorMessage: string;
+  triedLogin: boolean = false;
 
   constructor(  
       private route: ActivatedRoute,
@@ -36,6 +37,10 @@ export class LoginComponent implements OnInit {
   }
 
   login(username){
+    this.errorMessage = '';
+    this.triedLogin = true;
+    if(!this.username || !this.password) { return; }
+
     this.userService.login(this.username, this.password)
     .subscribe(
         (data) => {

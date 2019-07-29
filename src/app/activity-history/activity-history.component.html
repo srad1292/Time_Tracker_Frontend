@@ -9,7 +9,7 @@
     <h1 class='center'>Your Activity History</h1>
 
     <div id="history-filter-container" class="center" *ngIf="allActivities?.length">
-      <button (click)="toggleHistoryFilter()">{{filterToggleText}}</button>
+      <button id="toggle-form-btn" class="btn btn-primary" (click)="toggleHistoryFilter()">{{filterToggleText}}</button>
       
       <form id="history-form" #historyForm="ngForm" *ngIf="showFilterForm">
           <p>Start Date: <input name="start-date" type="date" [(ngModel)]="startDate"></p>
@@ -19,7 +19,7 @@
             Search Descriptions: <input name="description-search" type="text" [(ngModel)]="descriptionSubstring">
           </p>
           <p class="caveaut">* Leave start and/or end dates empty for no exclusion</p>
-          <button [disabled]="loadingActivities" (click)="filterHistory()">Filter</button>
+          <button class="btn btn-success" [disabled]="loadingActivities" (click)="filterHistory()">Filter</button>
       </form>
     </div>
 
@@ -41,7 +41,7 @@
                   <div class = "col-5">{{activity.description}}</div>
                   <div class = "col-3">{{activity.time | secondsToTime}}</div>
                   <div class = "col-1">
-                    <button [disabled]="deletingActivity" (click)="deleteActivity(activity); $event.stopPropagation()">
+                    <button class="btn btn-danger" [disabled]="deletingActivity" (click)="deleteActivity(activity); $event.stopPropagation()">
                       <fa name="trash"></fa>
                     </button>
                   </div>

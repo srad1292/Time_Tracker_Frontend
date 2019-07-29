@@ -1,15 +1,16 @@
-<h2>Login</h2>
+<div class="center">
+    <h2>Login</h2>
+    <form id="login-form" #loginForm="ngForm">
+        <p>Username: <input type="text" placeholder="Username" name="username" [(ngModel)]="username" required></p>
+        <p>Password: <input type="text" placeholder="Password" name ="password" type="password" [(ngModel)]="password" required></p>
 
-<div id="login-form">
-    <p>Username: <input type="text" placeholder="Username" [(ngModel)]="username"></p>
-    <p>Password: <input type="text" placeholder="Password" type="password" [(ngModel)]="password"></p>
-
-    <button (click)="login()">Submit</button>
-
-    <p *ngIf="errorMessage" class="error-message">{{errorMessage}}</p>
+        <button class="btn btn-success" [disabled]="!loginForm.form.valid" (click)="login()">Submit</button>
+        <p *ngIf="!loginForm.form.valid && triedLogin" class="error-message">Username and Password are required</p>
+        <p *ngIf="errorMessage" class="error-message">{{errorMessage}}</p>
+    </form>
 </div>
 
-<div>
+<div class="center">
     Do not have an account? <a routerLink="/registration">Sign Up</a> 
 </div>
 

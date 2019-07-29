@@ -15,8 +15,9 @@
 }
 
 #graph-container {
-    height:30vh;
-    width:60vw;
+    min-height:10vh;
+    min-width:20vw;
     margin-bottom: 5vh;
-    margin-left: 20%;
+    margin-left: 5%;
+    margin-right: 5%;
 }

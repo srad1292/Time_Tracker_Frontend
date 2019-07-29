@@ -1,21 +1,25 @@
-<h2>Registration</h2>
+<div class="center">
+  <h2>Registration</h2>
 
-<div>
-  <p>
-    First Name: <input placeholder="First Name" [(ngModel)]="newUser.first_name">
-  </p>
-  <p>
-    Last Name: <input placeholder="Last Name" [(ngModel)]="newUser.last_name">
-  </p>
-  <p>
-    Username: <input placeholder="Username" [(ngModel)]="newUser.uid">
-  </p>
-  <p>
-    Password: <input placeholder="Password" type="password" [(ngModel)]="newUser.password">
-  </p>
+  <form id="registration-form" #registrationForm="ngForm">  
+    <p>
+      First Name: <input placeholder="First Name" name="firstName" [(ngModel)]="newUser.first_name" required>
+    </p>
+    <p>
+      Last Name: <input placeholder="Last Name" name="lastName" [(ngModel)]="newUser.last_name">
+    </p>
+    <p>
+      Username: <input placeholder="Username" name="username" [(ngModel)]="newUser.uid" required>
+    </p>
+    <p>
+      Password: <input placeholder="Password" name="password" type="password" [(ngModel)]="newUser.password" required>
+    </p>
+ 
 
-  <button (click)="submitRegistration()">Register</button>
-  <p *ngIf="errorMessage" class="error-message">{{errorMessage}}</p>
+    <button class="btn btn-success" [disabled]="!registrationForm.form.valid " (click)="submitRegistration()">Register</button>
+    <p *ngIf="!registrationForm.form.valid && triedRegistration" class="error-message">First Name, Username, and Password required</p>
+    <p *ngIf="errorMessage" class="error-message">{{errorMessage}}</p>
+  </form>
 </div>
 
 

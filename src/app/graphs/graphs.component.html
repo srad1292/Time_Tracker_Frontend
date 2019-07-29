@@ -1,18 +1,20 @@
-<h1 class="center">Data Visualization</h1>
+<div class="center">
+  <h1 class="center">Data Visualization</h1>
 
-<form id="graph-form" #graphsForm="ngForm">
-    <p>Start Date: <input name="start-date" type="date" [(ngModel)]="startDate"></p>
-    <p>End Date: <input name="end-date" type="date" [(ngModel)]="endDate"></p>
-    <p class="caveaut warning" *ngIf="dateRangeError">End Date Must Not Be Before Start Date</p>
-    <p>
-      Graph Type:
-      <select name="graphSelect" [(ngModel)]="graphChoice">
-          <option *ngFor="let graphOption of graphOptions" [value]="graphOption.value">{{graphOption.label}}</option>
-      </select>
-    </p>
-    <p class="caveaut">* Leave start and/or end dates empty for no exclusion</p>
-    <button [disabled]="loadingActivities" (click)="createGraph()">View</button>
-</form>
+  <form id="graph-form" #graphsForm="ngForm">
+      <p>Start Date: <input name="start-date" type="date" [(ngModel)]="startDate"></p>
+      <p>End Date: <input name="end-date" type="date" [(ngModel)]="endDate"></p>
+      <p class="caveaut warning" *ngIf="dateRangeError">End Date Must Not Be Before Start Date</p>
+      <p>
+        Graph Type:
+        <select name="graphSelect" [(ngModel)]="graphChoice">
+            <option *ngFor="let graphOption of graphOptions" [value]="graphOption.value">{{graphOption.label}}</option>
+        </select>
+      </p>
+      <p class="caveaut">* Leave start and/or end dates empty for no exclusion</p>
+      <button class="btn btn-success" [disabled]="loadingActivities" (click)="createGraph()">View</button>
+  </form>
+</div>
 
 <h2 id="graph-title" class="center">{{graphTitle}}</h2>
 

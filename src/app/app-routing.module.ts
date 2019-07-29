@@ -9,7 +9,6 @@ import { RegistrationComponent } from './registration/registration.component';
 
 
 const routes: Routes = [
-  // { path: '**', redirectTo: '/home', pathMatch: 'full'},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'graphs', component: GraphsComponent },
   { path: 'history', component: ActivityHistoryComponent },
