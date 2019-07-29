@@ -42,7 +42,6 @@ export class ActivityHistoryComponent implements OnInit {
     this.activityService.getAllActivities(this.currentUser.uid).subscribe(
       (data: any) => {
         this.allActivities = (data['activities'] || []).sort((a, b) => ('' + b.date).localeCompare(a.date));;
-        console.log('huh: ', this.allActivities);
         this.organizeActivitiesByDate();
         this.loadingActivities = false;
       },
@@ -59,8 +58,6 @@ export class ActivityHistoryComponent implements OnInit {
     this.organizedActivities = [];
 
     this.organizedActivities = (this.allActivities || []).reduce((days, activity) => {
-      console.log('something: ', days);
-      console.log('activity: ', activity);
       if(activity.date === lastDate) {
         days[days.length-1].activities.push(activity);
       }
@@ -71,19 +68,20 @@ export class ActivityHistoryComponent implements OnInit {
       return days;
     }, [])
     
-    console.log('after reduce: ', this.organizedActivities);
   }
 
   //going to deal with this on another branch
   deleteActivity(activity) {
-    // this.deletingId = activity['_id'];
+    this.deletingId = activity['_id'];
     this.deletingActivity = true;
+    
     this.activityService.deleteActivity(activity).subscribe(
       (data: any) => {
         this.deletingActivity = false;
         if(data.message && data.message === 'ok') {
           //Clear out the rating on the front end
-          console.log('ok');
+          this.allActivities = this.allActivities.filter(activity => activity['_id'] !== this.deletingId);
+          this.organizeActivitiesByDate();
         }
       },  
       error => {

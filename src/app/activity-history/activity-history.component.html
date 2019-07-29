@@ -23,8 +23,7 @@
                   <div class = "col-3">{{activity.time | secondsToTime}}</div>
                   <div class = "col-1">
                     <button [disabled]="deletingActivity" (click)="deleteActivity(activity); $event.stopPropagation()">
-                      <fa name="spinner" animation="spin" *ngIf="deletingActivity && index===activityIndex; else notDeletingIndex"></fa>
-                      <ng-template #notDeletingIndex><fa name="trash"></fa></ng-template>
+                      <fa name="trash"></fa>
                     </button>
                   </div>
               </div>
@@ -35,7 +34,7 @@
   
     <ng-template #noActivitesFound>
       <div class="center">
-        No Activities Found For This User On This Day
+        No Activities To Display
       </div>
     </ng-template>
 </ng-template>
