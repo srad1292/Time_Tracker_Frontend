@@ -94,6 +94,7 @@
           <button type="button" class="btn btn-success" [disabled]="ticking || !modalActivity?.name?.length" (click)="saveActivity()" >Save</button>        
         </ng-template>
         <button type="button" class="btn btn-danger" [disabled]="ticking || savingActivity" (click)="cancelModal()" >Cancel</button>
+        <p class="error-message">{{saveError}}</p>
       </div>
 
     </div>

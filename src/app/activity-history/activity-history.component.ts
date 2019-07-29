@@ -63,7 +63,6 @@ export class ActivityHistoryComponent implements OnInit {
       error => {
         this.loadingActivities = false;
         this.allActivities = [];
-        console.log('get error: ', error);
       }
     );
   }
@@ -114,7 +113,6 @@ export class ActivityHistoryComponent implements OnInit {
       },  
       error => {
         this.deletingActivity = false;
-        console.log('delete error: ', error);
       }
     );
   }
@@ -139,6 +137,7 @@ export class ActivityHistoryComponent implements OnInit {
    * that contains the text that the user is searching
    */
   filterHistory() {
+    this.dateRangeError = false;
     if(this.startDate && this.endDate && (('' + this.startDate).localeCompare(this.endDate) > 0)){
       this.dateRangeError = true;
     }

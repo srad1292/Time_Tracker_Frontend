@@ -1,25 +1,37 @@
-<div class="center">
-  <h1 class="center">Data Visualization</h1>
-
-  <form id="graph-form" #graphsForm="ngForm">
-      <p>Start Date: <input name="start-date" type="date" [(ngModel)]="startDate"></p>
-      <p>End Date: <input name="end-date" type="date" [(ngModel)]="endDate"></p>
-      <p class="caveaut warning" *ngIf="dateRangeError">End Date Must Not Be Before Start Date</p>
-      <p>
-        Graph Type:
-        <select name="graphSelect" [(ngModel)]="graphChoice">
-            <option *ngFor="let graphOption of graphOptions" [value]="graphOption.value">{{graphOption.label}}</option>
-        </select>
-      </p>
-      <p class="caveaut">* Leave start and/or end dates empty for no exclusion</p>
-      <button class="btn btn-success" [disabled]="loadingActivities" (click)="createGraph()">View</button>
-  </form>
+<div class="center" *ngIf="loadingActivities; else activitiesLoaded">
+    <fa name="spinner" animation="spin" size="4x"></fa>
 </div>
 
-<h2 id="graph-title" class="center">{{graphTitle}}</h2>
+<ng-template #activitiesLoaded>
+  <div class="center">
+    <h1 class="center">Data Visualization</h1>
 
-<div id="graph-container" class="center">
-  <app-bar-graph *ngIf="graphType === 'bar'" [labels]="labels" [values]="values"></app-bar-graph> 
+    <form id="graph-form" #graphsForm="ngForm">
+        <p>Start Date: <input name="start-date" type="date" [(ngModel)]="startDate"></p>
+        <p>End Date: <input name="end-date" type="date" [(ngModel)]="endDate"></p>
+        <p class="caveaut warning" *ngIf="dateRangeError">End Date Must Not Be Before Start Date</p>
+        <p>
+          Graph Type:
+          <select name="graphSelect" [(ngModel)]="graphChoice">
+              <option *ngFor="let graphOption of graphOptions" [value]="graphOption.value">{{graphOption.label}}</option>
+          </select>
+        </p>
+        <p class="caveaut">* Leave start and/or end dates empty for no exclusion</p>
+        <button class="btn btn-success" [disabled]="loadingActivities" (click)="createGraph()">View</button>
+    </form>
+  </div>
 
-  <app-pie-chart *ngIf="graphType === 'pie'" [labels]="labels" [values]="values"></app-pie-chart> 
-</div>
+  <h2 id="graph-title" class="center">{{graphTitle}}</h2>
+
+  <div id="graph-container" class="center" *ngIf="allActivities?.length && labels?.length; else noActivities">
+    <app-bar-graph *ngIf="graphType === 'bar'" [labels]="labels" [values]="values"></app-bar-graph> 
+
+    <app-pie-chart *ngIf="graphType === 'pie'" [labels]="labels" [values]="values"></app-pie-chart> 
+  </div>
+
+  <ng-template #noActivities>
+    <div class="center">
+      <h3>No Activities Found</h3>
+    </div>
+  </ng-template> 
+</ng-template>

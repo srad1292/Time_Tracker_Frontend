@@ -11,7 +11,7 @@
       <form id="history-form" #historyForm="ngForm" *ngIf="showFilterForm">
           <p>Start Date: <input name="start-date" type="date" [(ngModel)]="startDate"></p>
           <p>End Date: <input name="end-date" type="date" [(ngModel)]="endDate"></p>
-          <p class="caveaut warning" *ngIf="dateRangeError">End Date Must Not Be Before Start Date</p>
+          <p class="error-message" *ngIf="dateRangeError">End Date Must Not Be Before Start Date</p>
           <p>
             Search Descriptions: <input name="description-search" type="text" [(ngModel)]="descriptionSubstring">
           </p>

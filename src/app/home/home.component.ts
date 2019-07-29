@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   modalTitle: String;
   modalActivity: ActivityTimer = new ActivityTimer();
   savingActivity: boolean = false;
+  saveError: string;
   startHours: number;
   startMinutes: number;
   startSeconds: number;
@@ -86,7 +87,6 @@ export class HomeComponent implements OnInit {
       error => {
         this.loadingActivities = false;
         this.timers = [];
-        console.log('Error: ', error);
       }
     );
   }
@@ -112,7 +112,6 @@ export class HomeComponent implements OnInit {
       },  
       error => {
         this.deletingActivity = false;
-        console.log('delete error: ', error);
       }
     );
   }
@@ -180,6 +179,7 @@ export class HomeComponent implements OnInit {
    * or update an existing one
    */
   saveActivity() {
+    this.saveError = '';
     this.modalActivity.date = this.selectedDate;
     this.modalActivity.username = this.currentUser.uid;
     this.modalActivity.time = this.tickingTime;
@@ -196,13 +196,14 @@ export class HomeComponent implements OnInit {
             this.display='none'; 
           }
           else {
-            console.log('no id came for some reason');
+            this.saveError = "Mongo Insert Error";
           }
           
         },
         error => { 
           this.savingActivity = false;
-          console.log('save error: ', error);
+          const message = (error.error || {}).message || error.message || error.statusText || 'Unknown Error Has Occured';
+          this.saveError = message;
         },
       );
       
@@ -217,7 +218,8 @@ export class HomeComponent implements OnInit {
         },
         error => { 
           this.savingActivity = false;
-          console.log('update error: ', error);
+          const message = (error.error || {}).message || error.message || error.statusText || 'Unknown Error Has Occured';
+          this.saveError = message;
         }
       );
       
