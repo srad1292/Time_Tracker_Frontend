@@ -14,12 +14,12 @@ import { UserService } from '../shared/services/user.service';
 })
 export class LoginComponent implements OnInit {
 
-  username: string = '';
-  password: string = '';
-  user: User;
-  returnUrl: string;
   errorMessage: string;
-  triedLogin: boolean = false;
+  password: string = '';
+  returnUrl: string;  
+  triedLogin: boolean = false;  
+  username: string = '';
+  user: User;
 
   constructor(  
       private route: ActivatedRoute,
@@ -36,7 +36,11 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  login(username){
+  /**
+   * Hits the backend to try to login based on the given username and password.
+   * If successful it will go to the previously viewed route or to the home page.
+   */
+  login(){
     this.errorMessage = '';
     this.triedLogin = true;
     if(!this.username || !this.password) { return; }

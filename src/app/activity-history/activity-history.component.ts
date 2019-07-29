@@ -17,20 +17,22 @@ import { UserService } from '../shared/services/user.service';
 export class ActivityHistoryComponent implements OnInit {
 
   currentUser: User;
-  allActivities: ActivityTimer[];
-  organizedActivities: object[];
-  loadingActivities: boolean = false;
-  activityIndex: number = -1;
-  deletingId: string;
-  deletingActivity: boolean = false;
 
-  showFilterForm: boolean = false;
-  filterToggleText: string = "Show Form"; 
-  startDate: string;
-  endDate: string;
+  //Activity loading/details Properties
+  allActivities: ActivityTimer[];
+  deletingActivity: boolean = false;  
+  deletingId: string;
+  loadingActivities: boolean = false;  
+  organizedActivities: object[];
+
+  //Filter Form Properties
   dateRangeError: boolean = false;
   descriptionSubstring: string;
-
+  endDate: string;
+  filterToggleText: string = "Show Form"; 
+  showFilterForm: boolean = false;
+  startDate: string;
+  
   constructor(private activityService: ActivityService, private router: Router, private userService: UserService) { 
     if (!this.userService.currentUserValue) { 
       this.router.navigate(['/login']);
@@ -40,10 +42,16 @@ export class ActivityHistoryComponent implements OnInit {
     }
   }
   
+
   ngOnInit() {
     this.getAllActivitiesForUser();
   }
 
+  /**
+   * Use the ActivityService to hit the backend to
+   * retrieve all activities for the current user
+   * then calls method to organize them for displaying
+   */
   getAllActivitiesForUser() {
     this.loadingActivities = true;
     this.activityService.getAllActivities(this.currentUser.uid).subscribe(
@@ -60,15 +68,24 @@ export class ActivityHistoryComponent implements OnInit {
     );
   }
 
+  /**
+   * Takes in a list of Activity Timers and sets class variable to
+   * the organized data for display.  Data is organized as such
+   * [{date: String, activities: ActivityTimer[]}]
+   * 
+   * @param { activitiesToOrganize: ActivityTimer[] } - The list of ActivityTimers to organize
+   */
   organizeActivitiesByDate(activitiesToOrganize) {
     let lastDate = '';
     this.organizedActivities = [];
-
+    //Organize Timers by date: [{date: String, activities: ActivityTimer[]}]
     this.organizedActivities = (activitiesToOrganize || []).reduce((days, activity) => {
       if(activity.date === lastDate) {
+        //Still the same date, just add to the time
         days[days.length-1].activities.push(activity);
       }
       else {
+        //New date, so create a new object to add to the list
         days.push({date: activity.date, activities: [activity]});
         lastDate = activity.date;
       }
@@ -77,7 +94,11 @@ export class ActivityHistoryComponent implements OnInit {
     
   }
 
-  //going to deal with this on another branch
+  /**
+   * Takes in an activity and then hits the backend to delete the activity 
+   * 
+   * @param {activity: ActivityTimer} - The activity we will be deleting
+   */
   deleteActivity(activity) {
     this.deletingId = activity['_id'];
     this.deletingActivity = true;
@@ -98,6 +119,9 @@ export class ActivityHistoryComponent implements OnInit {
     );
   }
 
+  /**
+   * Shows/Hides the filter form and updates the button text as well
+   */
   toggleHistoryFilter(){
     if(this.showFilterForm) {
       this.filterToggleText = 'Show Form';
@@ -109,6 +133,11 @@ export class ActivityHistoryComponent implements OnInit {
     }
   }
 
+  /**
+   * Uses the filter form data to filter the activities by 
+   * some range of dates and/or activities with a description
+   * that contains the text that the user is searching
+   */
   filterHistory() {
     if(this.startDate && this.endDate && (('' + this.startDate).localeCompare(this.endDate) > 0)){
       this.dateRangeError = true;
@@ -122,7 +151,7 @@ export class ActivityHistoryComponent implements OnInit {
       ); 
         
     });
-
+    //Call the organize method to organize the filtered activities for display
     this.organizeActivitiesByDate(filteredActivities);
   }
     

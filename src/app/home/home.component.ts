@@ -20,26 +20,28 @@ import { UserService } from '../shared/services/user.service';
 export class HomeComponent implements OnInit {
 
   currentUser: User;
-  selectedDate;
-  pickerDate; 
-  timers: ActivityTimer[] = [];
-  loadingActivities: boolean = false;
   deletingActivity: boolean = false;
+  loadingActivities: boolean = false;
+  pickerDate: string;   
+  selectedDate: string;
+  timers: ActivityTimer[] = [];
 
   //Modal Properties
+  activityIndex: number;  
   addingNewActivity: Boolean;
   display: String = 'none';
   modalTitle: String;
   modalActivity: ActivityTimer = new ActivityTimer();
-  tickingTime: number = 0;
-  activityIndex: number;
   savingActivity: boolean = false;
-  source = timer(1000, 1000);
-  ticker; 
-  ticking: boolean = false;
   startHours: number;
   startMinutes: number;
   startSeconds: number;
+  source = timer(1000, 1000);
+  ticker; 
+  ticking: boolean = false;
+  tickingTime: number = 0;
+  
+  
 
   constructor(private activityService: ActivityService, private router: Router, private userService: UserService) { 
     if (!this.userService.currentUserValue) { 
@@ -50,17 +52,30 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /**
+   * Sets up date so that component starts on today
+   * then calls method to retrieve activities for today
+   */
   ngOnInit() {
     this.selectedDate = moment().format('YYYY-MM-DD');
     this.pickerDate = moment().format('YYYY-MM-DD');
     this.getActivitiesForDate();
   }
 
+  /**
+   * Sets the day we are viewing to the user choice
+   * then calls the method to retrieve activities for that date
+   */
   changeDate() {
     this.selectedDate = this.pickerDate;
     this.getActivitiesForDate();
   }
 
+  /**
+   * Uses the ActivityService to hit the backend
+   * to retrieve all ActivityTimers for the current
+   * user for the selected date
+   */
   getActivitiesForDate() {
     this.loadingActivities = true;
     this.activityService.getActivitiesByDate(this.selectedDate, this.currentUser.uid).subscribe(
@@ -76,7 +91,14 @@ export class HomeComponent implements OnInit {
     );
   }
 
-
+  /**
+   * Takes in an activity and then hits the backend to delete the activity.
+   * Uses the index of the activity from the list to show a spinner
+   * on that button instead of a trachcan while the request is pending
+   * 
+   * @param {activity: ActivityTimer} - The activity we want to delete 
+   * @param {index: number} - The location of this activity in the timers list 
+   */
   deleteActivity(activity, index) {
     this.activityIndex = index;
     this.deletingActivity = true;
@@ -95,6 +117,14 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  /**
+   * Initializes data for the new activity or
+   * sets the values to the activity we are updating
+   * and then makes the modal visible 
+   * 
+   * @param {activity: ActivityTimer} - The activity we want to delete
+   * @param {index: number} - The location of this activity in the timers list 
+   */
   openActivityModal(activity, index) {
     this.startHours = null;
     this.startMinutes = null;
@@ -117,6 +147,11 @@ export class HomeComponent implements OnInit {
     this.display='block'; 
   }
 
+  /**
+   * Sets the ticker display to the values given by the user
+   * so that if you've already done something for an hour
+   * you can start the timer at an hour
+   */
   setStartTime() {
     let elapsed = 0;
     if(this.startHours && this.startHours > 0) {
@@ -133,17 +168,24 @@ export class HomeComponent implements OnInit {
 
   }
 
+  /**
+   * closes the modal
+   */
   cancelModal(){
     this.display='none'; 
   }
 
+  /**
+   * Calls the backend to either create a new activity
+   * or update an existing one
+   */
   saveActivity() {
     this.modalActivity.date = this.selectedDate;
     this.modalActivity.username = this.currentUser.uid;
     this.modalActivity.time = this.tickingTime;
     this.savingActivity = true;
-    console.log('Modal To Save: ', this.modalActivity);
-    // This is only for new, will need to update for edit
+
+    //Creating a new ActivityTimer
     if(this.addingNewActivity) {
       this.activityService.createActivity(this.modalActivity).subscribe(
         (data: any) => {
@@ -165,6 +207,7 @@ export class HomeComponent implements OnInit {
       );
       
     }
+    //Updating an existing ActivityTimer
     else {
       this.activityService.updateActivity(this.modalActivity).subscribe(
         (data: any) => {
@@ -178,11 +221,13 @@ export class HomeComponent implements OnInit {
         }
       );
       
-    }
-
-    
+    }    
   }
 
+  /**
+   * Start or pause the timer.  When running, the 
+   * time will increase every second.
+   */
   toggleTimer() {
     if(this.ticking) {
       this.ticking = false;
@@ -194,6 +239,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /**
+   * Sets the timer back to 0 for a new activity
+   * or back to the time that the activity we are updating was already set to
+   */
   resetTimer() {
     this.ticking = false;
     this.ticker.unsubscribe();

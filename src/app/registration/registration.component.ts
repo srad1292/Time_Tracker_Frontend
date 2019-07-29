@@ -15,9 +15,9 @@ import { UserService } from '../shared/services/user.service';
 })
 export class RegistrationComponent implements OnInit {
 
-  newUser: User = new User;
-  isLoading: boolean = false;
   errorMessage: String;
+  isLoading: boolean = false;
+  newUser: User = new User;  
   triedRegistration: boolean = false;
 
   constructor(
@@ -33,6 +33,10 @@ export class RegistrationComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Uses data in registration form to hit the backend to try
+   * to create a new user.  Goes to the login page on success.
+   */
   submitRegistration() {
     this.errorMessage = '';        
     this.triedRegistration = true;
@@ -54,6 +58,9 @@ export class RegistrationComponent implements OnInit {
       );
   }
 
+  /**
+   * Checks that the first name, username, and password fields have data
+   */
   isValidUser(): boolean{
       return (!!this.newUser.first_name && !!this.newUser.uid && !!this.newUser.password);
   }

@@ -22,6 +22,14 @@ export class UserService {
         return this.currentUserSubject.value;
     }
 
+    /**
+     * Hits the backend to check if there is a user with a matching 
+     * username and password combination and if so they will be given
+     * a token that we check to make sure exists.
+     * 
+     * @param {username: string} - The username provided 
+     * @param {password: string} - The password provided 
+     */
     public login(username: string, password: string) {
         return this.http.post<any>(`${this.userUrl}/authenticate`, { username, password })
             .pipe(
@@ -37,8 +45,10 @@ export class UserService {
             );
     }
 
+    /**
+     * remove user from local storage to log user out
+     */
     public logout(): void {
-        // remove user from local storage to log user out
         localStorage.removeItem('timeTrackerCurrentUser');
         this.currentUserSubject.next(null);
     }

@@ -24,11 +24,17 @@ export class AppComponent {
     this.userService.currentUser.subscribe(x => this.currentUser = x);
   }
 
+  /**
+   * Uses UserService to logout and then goes to the login page
+   */
   logout() {
     this.userService.logout();
     this.router.navigate(['/login']);
   }
 
+  /**
+   * Shows or hides the dropdown when clicking on username
+   */
   toggleUserNav() {
     this.userNavExpanded = !this.userNavExpanded;
   }

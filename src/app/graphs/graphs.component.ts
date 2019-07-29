@@ -18,15 +18,19 @@ import { UserService } from '../shared/services/user.service';
 export class GraphsComponent implements OnInit {
 
   currentUser: User;
+
   allActivities: ActivityTimer[];
   organizedActivities: object[];
   loadingActivities: boolean = false;
-  graphOptions: object[];
-  startDate: string;
+  
+  //Form Properties
+  dateRangeError: boolean = false;
   endDate: string;
   graphChoice: string;
-  dateRangeError: boolean = false;
-
+  graphOptions: object[];
+  startDate: string;
+ 
+  //Graph display/input properties
   labels: any[];
   values: any[];
   graphTitle: string = '';
@@ -46,6 +50,9 @@ export class GraphsComponent implements OnInit {
     this.getAllActivitiesForUser();
   }
 
+  /**
+   * Create the options for the dropdown in the graph form
+   */
   setGraphOptions() {
     this.graphOptions = [
       {label: 'Bar: Time Per Day', value: 'timePerDay'},
@@ -56,6 +63,11 @@ export class GraphsComponent implements OnInit {
     this.graphChoice = 'timePerDay';
   }
 
+  /**
+   * Use the ActivityService to hit the backend to
+   * retrieve all activities for the current user
+   * then calls method to organize them for displaying
+   */
   getAllActivitiesForUser() {
     this.loadingActivities = true;
     this.activityService.getAllActivities(this.currentUser.uid).subscribe(
@@ -70,7 +82,11 @@ export class GraphsComponent implements OnInit {
     );
   }
 
-
+  /**
+   * Checks that there's no range error for the date inputs.
+   * Then, calls the appropriate method to create the input
+   * values needed to create the appropriate graph component
+   */
   createGraph() {
     this.graphTitle = '';
     this.graphType='';
@@ -97,14 +113,20 @@ export class GraphsComponent implements OnInit {
     }
   }
 
+  /**
+   * 
+   * @param {labelAttr: string} - The ActivityTimer attribute that will be used as labels/bars/pie slices 
+   * @param {title: string} - The title to display for the graph 
+   * @param {type: string} - What type of graph or chart to create 
+   */
   setupValuesPerX(labelAttr, title, type) {
     let times = [];
     let attrValues = [];
 
     this.allActivities.forEach(activity => {
       if( (!this.startDate || ('' + activity.date).localeCompare(this.startDate) >= 0) && (!this.endDate || ('' + activity.date).localeCompare(this.endDate) <= 0) ) { 
-        let index = attrValues.findIndex(day => day === activity[labelAttr]);
-        //day already looked at
+        let index = attrValues.findIndex(attr => attr === activity[labelAttr]);
+        //attribute value already looked at
         if(index >= 0) {
           times[index] += activity.time;
         }
@@ -116,7 +138,9 @@ export class GraphsComponent implements OnInit {
       }
     });
 
+    //The labels/bars/slices for the graph we will create
     this.labels = attrValues;
+    //The value for each label in the labels array
     this.values = times;
     this.graphTitle = title;
     this.graphType = type;
