@@ -4,9 +4,9 @@
 - Backend: [Github Repo](https://github.com/srad1292/Time_Tracker_Backend)
 
 ## Versions Of Tools
-Angular-cli version: 7.2.4
-Node version: 10.15.0
-NPM version: 6.4.1
+- Angular-cli version: 7.2.4
+- Node version: 10.15.0
+- NPM version: 6.4.1
 
 
 ## Setup 
@@ -32,8 +32,7 @@ NPM version: 6.4.1
 - Go into Time_Tracker_Frontend and run: **npm install**
 
 ### Both
-- In backend/server.js there is app.listen.  Make sure this port is the same as the port
-- used in the UserService and ActivityService in angular app/shared/services/...
+- In backend/server.js there is app.listen.  Make sure this port is the same as the port used in the UserService and ActivityService in angular app/shared/services/...
 
 ### Backend Cont
 - In the bash terminal, run: **node server.js**
