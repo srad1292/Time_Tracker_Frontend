@@ -60,13 +60,23 @@
 
       <div class="modal-body">
         <p>Name: <input type="text" name="activityName" [disabled]="savingActivity" [(ngModel)]="modalActivity.name"></p>
-        <p>Description: <input type="text" name="activityDescription" [disabled]="savingActivity" [(ngModel)]="modalActivity.description"></p>
+        <p>Description: <textarea rows="5" cols="60" name="activityDescription" [disabled]="savingActivity" [(ngModel)]="modalActivity.description"></textarea></p>
+        <fieldset>
+          <legend>Starting Time Elapsed</legend>
+          <p>
+            <input type="number" class="inRow" name="startHours" placeholder="HH" [disabled]="savingActivity" [(ngModel)]="startHours">
+            <input type="number" class="inRow" name="startMinutes" placeholder="MM" [disabled]="savingActivity" [(ngModel)]="startMinutes">
+            <input type="number" class="inRow" name="startSeconds" placeholder="SS" [disabled]="savingActivity" [(ngModel)]="startSeconds">
+          </p>
+          <button class="btn btn-primary" [disabled]="savingActivity || ticking" (click)="setStartTime()">Set Time Elapsed</button>
+        </fieldset>
+        
       </div>
 
       <div class="modal-body">
         <div class="center">
           <p>Time: {{tickingTime | secondsToTime}}</p>
-          <button [disabled]="savingActivity" (click)="toggleTimer()" *ngIf="ticking; else notTicking">Stop</button>
+          <button class="btn btn-danger" [disabled]="savingActivity" (click)="toggleTimer()" *ngIf="ticking; else notTicking">Stop</button>
           <ng-template #notTicking>
             <button class="btn btn-primary" [disabled]="savingActivity" (click)="toggleTimer()">Start</button>
           </ng-template>

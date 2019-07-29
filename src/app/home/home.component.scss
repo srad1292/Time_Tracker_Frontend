@@ -7,9 +7,20 @@
     height:100vh;
 }
 
+.inRow {
+    width: 25%;
+    margin-right: 4px;
+}
+
 #activity-list {
     width: 70%;
     margin-left: 15%;
     border: 1px solid black;
 }
 
+
+
+.modal{
+    max-height: 700px;
+    overflow-y: scroll !important;
+}

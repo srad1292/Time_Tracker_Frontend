@@ -37,6 +37,9 @@ export class HomeComponent implements OnInit {
   source = timer(1000, 1000);
   ticker; 
   ticking: boolean = false;
+  startHours: number;
+  startMinutes: number;
+  startSeconds: number;
 
   constructor(private activityService: ActivityService, private router: Router, private userService: UserService) { 
     if (!this.userService.currentUserValue) { 
@@ -93,6 +96,10 @@ export class HomeComponent implements OnInit {
   }
 
   openActivityModal(activity, index) {
+    this.startHours = null;
+    this.startMinutes = null;
+    this.startSeconds = null;
+
     if(activity) {
       this.activityIndex = index;
       this.addingNewActivity = false;
@@ -108,6 +115,22 @@ export class HomeComponent implements OnInit {
     }
     
     this.display='block'; 
+  }
+
+  setStartTime() {
+    let elapsed = 0;
+    if(this.startHours && this.startHours > 0) {
+      elapsed += (this.startHours * 3600);
+    }
+    if(this.startMinutes && this.startMinutes > 0) {
+      elapsed += (this.startMinutes * 60);
+    }
+    if(this.startSeconds && this.startSeconds > 0) {
+      elapsed += this.startSeconds;
+    }
+
+    this.tickingTime = elapsed;
+
   }
 
   cancelModal(){
