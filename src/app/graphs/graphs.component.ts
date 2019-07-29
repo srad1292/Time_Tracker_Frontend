@@ -89,7 +89,7 @@ export class GraphsComponent implements OnInit {
           this.setupValuesPerX("name", "Time Spent Per Activity", "bar");
           break;
         case 'percentPerActivity':
-          this.setupValuesPerX("name", "Percent Spent Per Activity", "bar");
+          this.setupValuesPerX("name", "Percent Spent Per Activity", "pie");
           break;
         default:
           break;

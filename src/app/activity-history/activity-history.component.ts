@@ -24,6 +24,13 @@ export class ActivityHistoryComponent implements OnInit {
   deletingId: string;
   deletingActivity: boolean = false;
 
+  showFilterForm: boolean = false;
+  filterToggleText: string = "Show Form"; 
+  startDate: string;
+  endDate: string;
+  dateRangeError: boolean = false;
+  descriptionSubstring: string;
+
   constructor(private activityService: ActivityService, private router: Router, private userService: UserService) { 
     if (!this.userService.currentUserValue) { 
       this.router.navigate(['/login']);
@@ -42,7 +49,7 @@ export class ActivityHistoryComponent implements OnInit {
     this.activityService.getAllActivities(this.currentUser.uid).subscribe(
       (data: any) => {
         this.allActivities = (data['activities'] || []).sort((a, b) => ('' + b.date).localeCompare(a.date));;
-        this.organizeActivitiesByDate();
+        this.organizeActivitiesByDate(this.allActivities);
         this.loadingActivities = false;
       },
       error => {
@@ -53,11 +60,11 @@ export class ActivityHistoryComponent implements OnInit {
     );
   }
 
-  organizeActivitiesByDate() {
+  organizeActivitiesByDate(activitiesToOrganize) {
     let lastDate = '';
     this.organizedActivities = [];
 
-    this.organizedActivities = (this.allActivities || []).reduce((days, activity) => {
+    this.organizedActivities = (activitiesToOrganize || []).reduce((days, activity) => {
       if(activity.date === lastDate) {
         days[days.length-1].activities.push(activity);
       }
@@ -81,7 +88,7 @@ export class ActivityHistoryComponent implements OnInit {
         if(data.message && data.message === 'ok') {
           //Clear out the rating on the front end
           this.allActivities = this.allActivities.filter(activity => activity['_id'] !== this.deletingId);
-          this.organizeActivitiesByDate();
+          this.filterHistory();
         }
       },  
       error => {
@@ -90,5 +97,34 @@ export class ActivityHistoryComponent implements OnInit {
       }
     );
   }
+
+  toggleHistoryFilter(){
+    if(this.showFilterForm) {
+      this.filterToggleText = 'Show Form';
+      this.showFilterForm = false;
+    }
+    else {
+      this.filterToggleText = 'Hide Form';
+      this.showFilterForm = true;
+    }
+  }
+
+  filterHistory() {
+    if(this.startDate && this.endDate && (('' + this.startDate).localeCompare(this.endDate) > 0)){
+      this.dateRangeError = true;
+    }
+
+    const filteredActivities = this.allActivities.filter(activity => {
+      return (
+        (!this.descriptionSubstring || (activity.description || '').toLowerCase().includes(this.descriptionSubstring.toLowerCase())) &&
+        (!this.startDate || ('' + activity.date).localeCompare(this.startDate) >= 0) &&
+        (!this.endDate || ('' + activity.date).localeCompare(this.endDate) <= 0)
+      ); 
+        
+    });
+
+    this.organizeActivitiesByDate(filteredActivities);
+  }
+    
 
 }

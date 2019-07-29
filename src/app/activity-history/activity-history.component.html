@@ -2,8 +2,27 @@
     <fa name="spinner" animation="spin" size="4x"></fa>
 </div>
 
+
+
+
 <ng-template #activitiesLoaded>
     <h1 class='center'>Your Activity History</h1>
+
+    <div id="history-filter-container" class="center" *ngIf="allActivities?.length">
+      <button (click)="toggleHistoryFilter()">{{filterToggleText}}</button>
+      
+      <form id="history-form" #historyForm="ngForm" *ngIf="showFilterForm">
+          <p>Start Date: <input name="start-date" type="date" [(ngModel)]="startDate"></p>
+          <p>End Date: <input name="end-date" type="date" [(ngModel)]="endDate"></p>
+          <p class="caveaut warning" *ngIf="dateRangeError">End Date Must Not Be Before Start Date</p>
+          <p>
+            Search Descriptions: <input name="description-search" type="text" [(ngModel)]="descriptionSubstring">
+          </p>
+          <p class="caveaut">* Leave start and/or end dates empty for no exclusion</p>
+          <button [disabled]="loadingActivities" (click)="filterHistory()">Filter</button>
+      </form>
+    </div>
+
     <div id="activity-history-display" *ngIf="organizedActivities?.length; else noActivitesFound">
         <div class="day-of-activities" *ngFor="let day of organizedActivities">
             <div class="center">
