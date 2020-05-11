@@ -12,6 +12,7 @@ export class BarGraphComponent implements OnInit {
 
   @Input() labels: any[];  
   @Input() values: any[];
+  secondValues: any[];
 
   barchart: Chart;
   colors: string[];
@@ -26,6 +27,7 @@ export class BarGraphComponent implements OnInit {
    * Create new graph when input properties change
    */
   ngOnChanges() {
+    this.secondValues = [600, 11776, 4400, 6600, 4200, 3100]
     this.getColors();
     this.buildGraph();
   }
@@ -46,16 +48,24 @@ export class BarGraphComponent implements OnInit {
    */
   buildGraph() {
     if (this.barchart) this.barchart.destroy();
+    console.log(this.values);
     this.barchart = new Chart('barCanvas', {  
       type: 'bar',  
       data: {  
         labels: this.labels,
         datasets: [  
           {  
+            label: "BCBS",
             data: this.values,  
             borderColor: '#3cba9f',  
             backgroundColor: this.colors,
             fill: true  
+          },
+          {  
+            label: "Bright Health",
+            data: this.secondValues,  
+            borderColor: '#3cba9f',  
+            backgroundColor: this.colors,
           }  
         ]  
       },  
